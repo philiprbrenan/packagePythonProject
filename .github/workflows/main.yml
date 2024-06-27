@@ -1,0 +1,47 @@
+# Test 2024-06-27 at 20:57:50
+
+name: Test
+run-name: Pdm
+
+on:
+  push:
+    paths:
+      - '**/main.yml'
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: 'main'
+
+    - name: Install Tree
+      run: |
+        sudo apt install tree
+        tree
+
+    - name: Python
+      run: |
+        python --version
+
+    - name: Package
+      run: |
+        python -m pip install build
+        python -m build
+
+    - name: Files
+      run: |
+        tree
+
+    - name: Install elsewhere
+      run: |
+        python -m venv testInstall
+        cd testInstall
+        source bin/activate
+        python -m pip install ../dist/hello-0.1.0-py3-none-any.whl pytest
+        mkdir -p tests
+        cp ../test_1.py tests/
+        python -m pytest tests
